@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Chart Library Documentation</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --primary-color: #7479ED;
+            --secondary-color: #1a1c2c;
+            --border-color: #e0e0e0;
+            --code-bg: #f5f5f5;
+            --sidebar-bg: #f8f9fa;
+        }
+
+        html[data-theme='dark'] {
+            --bg-color: #1a1c2c;
+            --text-color: #e5e7eb;
+            --primary-color: #818CF8;
+            --secondary-color: #ffffff;
+            --border-color: #3a3f51;
+            --code-bg: #2d3241;
+            --sidebar-bg: #232734;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        #sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding-bottom: 2rem;
+        }
+
+        #sidebar-header {
+            padding: 1.5rem 1.5rem 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        #sidebar-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        #theme-switcher {
+            cursor: pointer;
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav .nav-category {
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        nav a {
+            display: block;
+            padding: 0.6rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.2s, color 0.2s;
+            font-size: 0.95rem;
+        }
+        
+        nav a:hover {
+            background-color: var(--primary-color);
+            color: white !important;
+        }
+
+        nav a.active {
+            background-color: var(--primary-color);
+            color: white !important;
+            font-weight: 600;
+        }
+
+        #main-content {
+            margin-left: 280px;
+            padding: 2rem 3rem;
+            width: calc(100% - 280px);
+        }
+
+        section {
+            display: none;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        p, li {
+            font-size: 1rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 0.8rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--sidebar-bg);
+            font-weight: 600;
+        }
+        
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            background-color: var(--code-bg);
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            border-radius: 6px;
+        }
+        
+        pre {
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        pre code {
+            padding: 0;
+            background: none;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+        
+        .badge-required {
+            background-color: #dc3545;
+        }
+        
+        .badge-optional {
+            background-color: #6c757d;
+        }
+
+        .badge-info {
+            background-color: #0d6efd;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            #sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            #main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<aside id="sidebar">
+    <div id="sidebar-header">
+        <h1>Chart Docs</h1>
+        <span id="theme-switcher">🌓</span>
+    </div>
+    <nav id="nav-menu">
+        <ul>
+            <li><div class="nav-category">General</div></li>
+            <li><a href="#general-config">General Configuration</a></li>
+            
+            <li><div class="nav-category">Cartesian Charts</div></li>
+            <li><a href="#line">Line Chart</a></li>
+            <li><a href="#column">Column Chart</a></li>
+            <li><a href="#bar">Bar Chart</a></li>
+            <li><a href="#area">Area Chart</a></li>
+            <li><a href="#spline">Spline Chart</a></li>
+            <li><a href="#spline-area">Spline Area Chart</a></li>
+            <li><a href="#step-line">Step Line Chart</a></li>
+            <li><a href="#step-area">Step Area Chart</a></li>
+            <li><a href="#range-column">Range Column Chart</a></li>
+            <li><a href="#range-area">Range Area Chart</a></li>
+            <li><a href="#scatter">Scatter Chart</a></li>
+            <li><a href="#bubble">Bubble Chart</a></li>
+            <li><a href="#waterfall">Waterfall Chart</a></li>
+            
+            <li><div class="nav-category">Multi-Series Charts</div></li>
+            <li><a href="#multi-series-column">Multi-Series Column</a></li>
+            <li><a href="#multi-series-bar">Multi-Series Bar</a></li>
+            <li><a href="#multi-series-line">Multi-Series Line</a></li>
+            <li><a href="#multi-series-spline">Multi-Series Spline</a></li>
+            
+            <li><div class="nav-category">Stacked Charts</div></li>
+            <li><a href="#stacked-column">Stacked Column</a></li>
+            <li><a href="#stacked-bar">Stacked Bar</a></li>
+            <li><a href="#stacked-column-100">100% Stacked Column</a></li>
+            <li><a href="#stacked-bar-100">100% Stacked Bar</a></li>
+
+            <li><div class="nav-category">Financial & Statistical</div></li>
+            <li><a href="#hilo">Hilo Chart</a></li>
+            <li><a href="#hilo-open-close">Hilo Open/Close Chart</a></li>
+            <li><a href="#candle">Candle Chart</a></li>
+            <li><a href="#box-whisker">Box & Whisker Chart</a></li>
+            <li><a href="#error-bar">Error Bar Chart</a></li>
+            
+            <li><div class="nav-category">Circular Charts</div></li>
+            <li><a href="#pie">Pie Chart</a></li>
+            <li><a href="#doughnut">Doughnut Chart</a></li>
+            <li><a href="#radial-bar">Radial Bar Chart</a></li>
+            
+            <li><div class="nav-category">Specialized Charts</div></li>
+            <li><a href="#funnel">Funnel Chart</a></li>
+            <li><a href="#pyramid">Pyramid Chart</a></li>
+            <li><a href="#radar">Radar Chart</a></li>
+            
+            <li><div class="nav-category">Gauges</div></li>
+            <li><a href="#radial-gauge">Radial Gauge</a></li>
+            <li><a href="#linear-gauge">Linear Gauge</a></li>
+            
+            <li><div class="nav-category">Map Charts</div></li>
+            <li><a href="#shape-map">Shape Map</a></li>
+            <li><a href="#bubble-map">Bubble Map</a></li>
+            <li><a href="#marker-map">Marker Map</a></li>
+            <li><a href="#polyline-map">Polyline Map</a></li>
+        </ul>
+    </nav>
+</aside>
+
+<main id="main-content">
+    
+    <!-- GENERAL CONFIGURATION -->
+    <section id="general-config">
+        <h2>General JSON Structure</h2>
+        <p>All chart configurations follow a primary JSON structure with three main keys: <code>Data</code>, <code>Config</code>, and <code>Appearance</code>. Many properties are common across all charts, while some are specific to a chart family (e.g., Cartesian) or a single chart type.</p>
+        
+        <h3>Root Structure</h3>
+        <pre><code class="language-json">
+{
+  "Data": { ... },
+  "Config": { ... },
+  "Appearance": { ... }
+}
+        </code></pre>
+
+        <h3>Common <code>Config</code> Properties</h3>
+        <p>These properties control the behavior and features of the chart.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Location</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>presentation</code></td>
+                    <td><code>Config.viewModes.presentation</code></td>
+                    <td>String</td>
+                    <td><span class="badge badge-required">Required</span> Defines the chart type to render. Must match one of the supported chart type strings (e.g., "linechart", "shapeMap").</td>
+                </tr>
+                <tr>
+                    <td><code>fetchData</code></td>
+                    <td><code>Config.data.fetchData</code></td>
+                    <td>Boolean</td>
+                    <td>If <code>true</code>, the chart will attempt to fetch data from the API specified in <code>Data.features.servercommunication</code>. Defaults to <code>false</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>enableTooltips</code></td>
+                    <td><code>Config.features.enableTooltips</code></td>
+                    <td>Boolean</td>
+                    <td>Enables or disables tooltips on hover or tap. Defaults to <code>true</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>enableZoomAndPan</code></td>
+                    <td><code>Config.features.enableZoomAndPan</code></td>
+                    <td>Boolean</td>
+                    <td>Enables zooming and panning interactions. Mostly applicable to Cartesian and Map charts. Defaults to <code>false</code>.</td>
+                </tr>
+                 <tr>
+                    <td><code>initialVisibleItemCount</code></td>
+                    <td><code>Config.features.initialVisibleItemCount</code></td>
+                    <td>Number</td>
+                    <td>For Cartesian charts with zooming enabled, this sets the number of initial data points to display on the x-axis. Defaults to <code>5</code>.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Common <code>Data.graph</code> Properties</h3>
+        <p>These properties define the data source and its mapping.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>title</code></td>
+                    <td>String</td>
+                    <td><span class="badge badge-required">Required</span> The title displayed at the top of the chart.</td>
+                </tr>
+                <tr>
+                    <td><code>xAxisValue</code></td>
+                    <td>String</td>
+                    <td><span class="badge badge-required">Required</span> The key within each data point object that maps to the X-axis value (or category label).</td>
+                </tr>
+                <tr>
+                    <td><code>yAxisValue</code></td>
+                    <td>String</td>
+                    <td><span class="badge badge-required">Required</span> The key within each data point object that maps to the Y-axis value.</td>
+                </tr>
+                <tr>
+                    <td><code>data</code></td>
+                    <td>Array&lt;Object&gt;</td>
+                    <td><span class="badge badge-required">Required</span> An array of data objects used to render the chart when not fetching from an API.</td>
+                </tr>
+                <tr>
+                    <td><code>filterKeys</code></td>
+                    <td>Array&lt;String&gt;</td>
+                    <td>An array of keys from the data objects that should be available for user-driven filtering in the UI.</td>
+                </tr>
+            </tbody>
+        </table>
+
+         <h3>Common <code>Appearance.graph</code> Properties</h3>
+         <p>These properties control the visual styling of the chart.</p>
+         <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>color</code></td>
+                    <td>String</td>
+                    <td>The primary color for text elements like the title and axis labels. Can be a hex code (e.g., "#333333").</td>
+                </tr>
+                <tr>
+                    <td><code>backgroundColor</code></td>
+                    <td>String</td>
+                    <td>The background color of the chart container. Can be a hex code. Defaults to <code>transparent</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>barColor</code></td>
+                    <td>String</td>
+                    <td>A general purpose <strong>Series Color</strong> used for elements like bars, columns, lines, and markers. Acts as a primary color for the data series itself. Can be a hex code.</td>
+                </tr>
+                <tr>
+                    <td><code>width</code> / <code>height</code></td>
+                    <td>String</td>
+                    <td>The dimensions of the chart container. Can be a percentage (e.g., "100%") or pixels (e.g., "400px").</td>
+                </tr>
+                 <tr>
+                    <td><code>xAxisLabelIntersectAction</code></td>
+                    <td>String</td>
+                    <td><span class="badge badge-info">Cartesian</span> How to handle overlapping X-axis labels. Values: "none", "hide", "trim", "rotate45", "rotate90", "multipleRows", "wrap".</td>
+                </tr>
+                <tr>
+                    <td><code>showLegend</code></td>
+                    <td>Boolean</td>
+                    <td><span class="badge badge-info">Maps & Multi-Series</span> Toggles the visibility of the chart's legend.</td>
+                </tr>
+                <tr>
+                    <td><code>legendPosition</code></td>
+                    <td>String</td>
+                    <td><span class="badge badge-info">Maps</span> Position of the legend. Values: "top", "bottom", "left", "right".</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- CARTESIAN CHARTS -->
+    <section id="line">
+        <h2>Line Chart</h2>
+        <p>A standard chart that displays information as a series of data points connected by straight line segments. Ideal for showing trends over time.</p>
+        
+        <h3>Specific <code>Appearance.graph</code> Properties</h3>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                 <tr>
+                    <td><code>lineStyle</code></td>
+                    <td>String</td>
+                    <td>The style of the line. Supported values are "solid" or "dotted". Defaults to <strong>"dotted"</strong>.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Stock Price Over Time",
+        "xAxisValue": "date",
+        "yAxisValue": "price",
+        "data": [
+          {"date": "2023-01-01", "price": 150},
+          {"date": "2023-01-02", "price": 152},
+          {"date": "2023-01-03", "price": 155}
+        ]
+      }
+    }
+  },
+  "Config": {
+    "viewModes": {"presentation": "linechart"},
+    "features": {"enableZoomAndPan": true, "initialVisibleItemCount": 3}
+  },
+  "Appearance": {
+    "features": {
+      "graph": [{"barColor": "#2196F3", "lineStyle": "solid"}]
+    }
+  }
+}
+        </code></pre>
+    </section>
+
+    <section id="column">
+        <h2>Column Chart</h2>
+        <p>Uses vertical bars to show comparisons among categories. One axis of the chart shows the specific categories being compared, and the other axis represents a discrete value.</p>
+        
+        <h3>Specific <code>Appearance.graph</code> Properties</h3>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>columnWidth</code></td>
+                    <td>Number</td>
+                    <td>The width of each column as a fraction of the available category space (e.g., 0.8 is 80%). Defaults to <code>0.8</code>.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Monthly Profit",
+        "xAxisValue": "month",
+        "yAxisValue": "profit",
+        "data": [
+          {"month": "Jan", "profit": 500}, 
+          {"month": "Feb", "profit": 750}, 
+          {"month": "Mar", "profit": -200}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "columnchart"}},
+  "Appearance": {
+    "features": {
+      "graph": [{"barColor": "#4CAF50", "columnWidth": 0.7}]
+    }
+  }
+}
+        </code></pre>
+    </section>
+
+    <section id="bar">
+        <h2>Bar Chart</h2>
+        <p>A transposed version of the Column Chart, using horizontal bars. It's particularly useful when category labels are long.</p>
+        
+        <h3>Specific <code>Appearance.graph</code> Properties</h3>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>columnWidth</code></td>
+                    <td>Number</td>
+                    <td>The width of each bar as a fraction of the available category space (e.g., 0.8 is 80%). Defaults to <code>0.8</code>.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Sales by Product",
+        "xAxisValue": "product",
+        "yAxisValue": "sales",
+        "data": [
+          {"product": "SKU-FR-8432-A", "sales": 50}, 
+          {"product": "SKU-PT-9912-B", "sales": 80},
+          {"product": "SKU-DE-5561-D", "sales": 95}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "barchart"}},
+  "Appearance": {
+    "features": {
+      "graph": [{"barColor": "#FF9800", "xAxisLabelIntersectAction": "wrap"}]
+    }
+  }
+}
+        </code></pre>
+    </section>
+    
+    <!-- More Cartesian Charts -->
+    <section id="area">
+        <h2>Area Chart</h2>
+        <p>Based on the line chart, but the area between the axis and the line is filled with color. It can be used to represent volume or total amounts over time.</p>
+        <p>This chart shares its configuration with the Line Chart and has no unique properties.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Website Users",
+        "xAxisValue": "year",
+        "yAxisValue": "users",
+        "data": [{"year": 2021, "users": 1500}, {"year": 2022, "users": 2500}, {"year": 2023, "users": 3200}]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "areachart"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#673AB7"}]}}
+}
+        </code></pre>
+    </section>
+
+    <section id="spline">
+        <h2>Spline Chart</h2>
+        <p>A type of line chart that connects data points with a smooth, curved line (a cardinal spline) instead of a straight one. Useful for data that changes in a continuous, non-linear fashion.</p>
+        <h3>Specific <code>Appearance.graph</code> Properties</h3>
+        <table>
+             <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                 <tr>
+                    <td><code>lineStyle</code></td>
+                    <td>String</td>
+                    <td>The style of the spline. Supported values are "solid" or "dotted". Defaults to <strong>"dotted"</strong>.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Temperature Fluctuation",
+        "xAxisValue": "time",
+        "yAxisValue": "temp",
+        "data": [{"time": "8am", "temp": 15}, {"time": "12pm", "temp": 22}, {"time": "4pm", "temp": 20}]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "splinechart"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#F44336", "lineStyle": "solid"}]}}
+}
+        </code></pre>
+    </section>
+    
+    <section id="spline-area">
+        <h2>Spline Area Chart</h2>
+        <p>Combines the smooth curve of a Spline Chart with the filled area of an Area Chart.</p>
+        <p>This chart shares its configuration with the Spline Chart and has no unique properties.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "User Sessions",
+        "xAxisValue": "date",
+        "yAxisValue": "sessions",
+        "data": [{"date": "Jun 1", "sessions": 450}, {"date": "Jun 2", "sessions": 500}, {"date": "Jun 3", "sessions": 470}]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "splineareachart"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#607D8B"}]}}
+}
+        </code></pre>
+    </section>
+
+    <section id="step-line">
+        <h2>Step Line Chart</h2>
+        <p>A variation of the line chart where points are connected by horizontal and vertical line segments, creating a step-like appearance. Ideal for showing changes that occur at irregular intervals.</p>
+        <h3>Specific <code>Appearance.graph</code> Properties</h3>
+        <table>
+             <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                 <tr>
+                    <td><code>lineStyle</code></td>
+                    <td>String</td>
+                    <td>The style of the line. Supported values are "solid" or "dotted". Defaults to <strong>"dotted"</strong>.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Inventory Levels",
+        "xAxisValue": "day",
+        "yAxisValue": "units",
+        "data": [{"day": "Mon", "units": 100}, {"day": "Tue", "units": 100}, {"day": "Wed", "units": 75}]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "steplinechart"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#9C27B0", "lineStyle": "solid"}]}}
+}
+        </code></pre>
+    </section>
+
+    <section id="step-area">
+        <h2>Step Area Chart</h2>
+        <p>Combines the step-like progression of a Step Line Chart with the filled area of an Area Chart.</p>
+        <p>This chart shares its configuration with the Step Line Chart and has no unique properties.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Bandwidth Usage",
+        "xAxisValue": "day",
+        "yAxisValue": "usage",
+        "data": [{"day": 1, "usage": 2.5}, {"day": 2, "usage": 2.5}, {"day": 3, "usage": 3.1}]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "stepareachart"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#FFC107"}]}}
+}
+        </code></pre>
+    </section>
+
+     <section id="range-column">
+        <h2>Range Column Chart</h2>
+        <p>Uses vertical columns to display a range of values (a high and a low value) for each category, rather than a single value.</p>
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+         <p>The <code>yAxisValue</code> property is ignored. Instead, each data point must contain specific keys for the high and low values.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>high</code></td>
+                    <td>Number</td>
+                    <td><span class="badge badge-required">Required in Data</span> The key in each data object representing the highest point of the range for that category.</td>
+                </tr>
+                <tr>
+                    <td><code>low</code></td>
+                    <td>Number</td>
+                    <td><span class="badge badge-required">Required in Data</span> The key in each data object representing the lowest point of the range for that category.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Daily Temperature Range",
+        "xAxisValue": "day",
+        "yAxisValue": "ignored",
+        "data": [
+          {"day": "Mon", "low": 10, "high": 22}, 
+          {"day": "Tue", "low": 12, "high": 24}, 
+          {"day": "Wed", "low": 8, "high": 19}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "rangecolumnseries"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#00BCD4"}]}}
+}
+        </code></pre>
+    </section>
+
+    <section id="range-area">
+        <h2>Range Area Chart</h2>
+        <p>Similar to a standard Area Chart, but it displays a continuous range between two values (high and low) over a period or category.</p>
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+         <p>The <code>yAxisValue</code> property is ignored. Instead, each data point must contain specific keys for the high and low values.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>high</code></td>
+                    <td>Number</td>
+                    <td><span class="badge badge-required">Required in Data</span> The key in each data object representing the upper boundary of the range area.</td>
+                </tr>
+                <tr>
+                    <td><code>low</code></td>
+                    <td>Number</td>
+                    <td><span class="badge badge-required">Required in Data</span> The key in each data object representing the lower boundary of the range area.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Acceptable Performance Range",
+        "xAxisValue": "time",
+        "yAxisValue": "ignored",
+        "data": [
+          {"time": "Q1", "low": 60, "high": 80}, 
+          {"time": "Q2", "low": 65, "high": 85}, 
+          {"time": "Q3", "low": 70, "high": 90}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "rangeareaseries"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#CDDC39"}]}}
+}
+        </code></pre>
+    </section>
+    
+    <section id="scatter">
+        <h2>Scatter Chart</h2>
+        <p>Displays values for two variables as a collection of points. It is used to observe relationships between variables.</p>
+        
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Height vs. Weight",
+        "xAxisValue": "height",
+        "yAxisValue": "weight",
+        "data": [
+          {"height": 160, "weight": 55}, 
+          {"height": 175, "weight": 70}, 
+          {"height": 180, "weight": 85}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "scatterseries"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#8BC34A"}]}}
+}
+        </code></pre>
+    </section>
+
+    <section id="bubble">
+        <h2>Bubble Chart</h2>
+        <p>A variation of a Scatter Chart where data points are replaced with bubbles, and an additional dimension of the data is represented by the size of the bubbles.</p>
+
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+        <p>In addition to <code>xAxisValue</code> and <code>yAxisValue</code>, each data point must have a key for bubble size.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>size</code></td>
+                    <td>Number</td>
+                    <td><span class="badge badge-required">Required in Data</span> The key in each data object that determines the size of the bubble.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Market Analysis",
+        "xAxisValue": "marketShare",
+        "yAxisValue": "growthRate",
+        "data": [
+          {"marketShare": 15, "growthRate": 12, "size": 5000, "product": "A"}, 
+          {"marketShare": 25, "growthRate": 5, "size": 8000, "product": "B"}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "bubbleseries"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#795548"}]}}
+}
+        </code></pre>
+    </section>
+    
+    <section id="waterfall">
+        <h2>Waterfall Chart</h2>
+        <p>Helps in understanding the cumulative effect of sequentially introduced positive or negative values. It shows how an initial value is affected by a series of intermediate values, leading to a final value.</p>
+        
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+        <p>Data points can have special boolean flags to denote them as summaries.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>isIntermediateSum</code></td>
+                    <td>Boolean</td>
+                    <td><span class="badge badge-optional">Optional in Data</span> If <code>true</code>, this data point is calculated as a subtotal of the previous values. Its own <code>yAxisValue</code> is ignored.</td>
+                </tr>
+                <tr>
+                    <td><code>isTotalSum</code></td>
+                    <td>Boolean</td>
+                    <td><span class="badge badge-optional">Optional in Data</span> If <code>true</code>, this data point is the final sum of all previous operations. Its own <code>yAxisValue</code> is ignored.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Annual P&L Waterfall",
+        "xAxisValue": "category",
+        "yAxisValue": "amount",
+        "data": [
+          {"category": "Revenue", "amount": 5000}, 
+          {"category": "COGS", "amount": -1500}, 
+          {"category": "Gross Profit", "isIntermediateSum": true}, 
+          {"category": "Ops", "amount": -800}, 
+          {"category": "Net Profit", "isTotalSum": true}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "waterfallseries"}},
+  "Appearance": {"features": {"graph": [{"xAxisLabelIntersectAction": "rotate45"}]}}
+}
+        </code></pre>
+    </section>
+
+    <!-- MULTI-SERIES CHARTS -->
+    <section id="multi-series-column">
+        <h2>Multi-Series Column Chart</h2>
+        <p>A column chart that can display and compare multiple data series side-by-side for each category. It requires a key in the data to group by.</p>
+        
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+        <p>Multi-series charts require a third key in the data (besides x and y axes) to group the data into distinct series. This key should be included in <code>filterKeys</code>.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                   <td><code>filterKeys</code></td>
+                    <td>Array&lt;String&gt;</td>
+                    <td><span class="badge badge-required">Required</span> Must contain the key used for grouping data into different series (e.g., "metric", "product", "region").</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Revenue vs. Profit",
+        "xAxisValue": "quarter",
+        "yAxisValue": "amount",
+        "filterKeys": ["metric"],
+        "data": [
+          {"quarter": "Q1", "amount": 1000, "metric": "Revenue"}, 
+          {"quarter": "Q1", "amount": 400, "metric": "Profit"}, 
+          {"quarter": "Q2", "amount": 1200, "metric": "Revenue"},
+          {"quarter": "Q2", "amount": 550, "metric": "Profit"}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "multiseriescolumn"}},
+  "Appearance": {"features": {"graph": []}}
+}
+        </code></pre>
+    </section>
+    
+    <section id="multi-series-bar">
+        <h2>Multi-Series Bar Chart</h2>
+        <p>A transposed version of the Multi-Series Column Chart, with horizontal bars. Ideal for comparing multiple series when category names are long.</p>
+        <p>Configuration is identical to Multi-Series Column Chart.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+        "title": "Imports vs. Exports",
+        "xAxisValue": "country",
+        "yAxisValue": "value",
+        "filterKeys": ["type"],
+        "data": [
+            {"country": "USA", "value": 200, "type": "Exports"}, 
+            {"country": "USA", "value": 300, "type": "Imports"}, 
+            {"country": "CAN", "value": 150, "type": "Exports"}, 
+            {"country": "CAN", "value": 180, "type": "Imports"}
+        ]
+    }
+  },
+  "Config": {"viewModes": {"presentation": "multiseriesbar"}},
+  "Appearance": {"features": {"graph": []}}
+}
+        </code></pre>
+    </section>
+    
+     <section id="multi-series-line">
+        <h2>Multi-Series Line Chart</h2>
+        <p>Displays multiple data series as distinct lines on the same chart. Excellent for comparing trends between different groups over time.</p>
+        <p>Configuration logic is identical to Multi-Series Column Chart, requiring a grouping key in <code>filterKeys</code>.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Stock Price Comparison",
+        "xAxisValue": "date",
+        "yAxisValue": "price",
+        "filterKeys": ["stock"],
+        "data": [
+          {"date": "2023-01-01", "price": 100, "stock": "AAPL"}, 
+          {"date": "2023-01-02", "price": 105, "stock": "AAPL"}, 
+          {"date": "2023-01-01", "price": 150, "stock": "GOOG"}, 
+          {"date": "2023-01-02", "price": 152, "stock": "GOOG"}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "multiseriesline"}},
+  "Appearance": {"features": {"graph": []}}
+}
+        </code></pre>
+    </section>
+
+    <section id="multi-series-spline">
+        <h2>Multi-Series Spline Chart</h2>
+        <p>A version of the Multi-Series Line Chart that connects data points with smooth curves instead of straight lines.</p>
+        <p>Configuration logic is identical to Multi-Series Column/Line Charts, requiring a grouping key in <code>filterKeys</code>.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Sensor Readings",
+        "xAxisValue": "time",
+        "yAxisValue": "reading",
+        "filterKeys": ["sensor"],
+        "data": [
+          {"time": 0, "reading": 10, "sensor": "A"}, 
+          {"time": 1, "reading": 12, "sensor": "A"},
+          {"time": 0, "reading": 15, "sensor": "B"}, 
+          {"time": 1, "reading": 14, "sensor": "B"}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "multiseriesspline"}},
+  "Appearance": {"features": {"graph": []}}
+}
+        </code></pre>
+    </section>
+
+    <!-- STACKED CHARTS -->
+    <section id="stacked-column">
+        <h2>Stacked Column Chart</h2>
+        <p>A type of column chart where multiple series are stacked on top of each other in vertical columns. It shows the total magnitude for a category and the contribution of each sub-group.</p>
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+        <p>Like multi-series charts, stacked charts require a third key in the data (besides x and y axes) to group the data into stacked segments. This key should be included in <code>filterKeys</code>.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                   <td><code>filterKeys</code></td>
+                    <td>Array&lt;String&gt;</td>
+                    <td><span class="badge badge-required">Required</span> Must contain the key used for grouping data into different stacked series (e.g., "product", "region").</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Sales by Product per Quarter",
+        "xAxisValue": "quarter",
+        "yAxisValue": "sales",
+        "filterKeys": ["product"],
+        "data": [
+          {"quarter": "Q1", "sales": 100, "product": "A"}, 
+          {"quarter": "Q1", "sales": 150, "product": "B"}, 
+          {"quarter": "Q2", "sales": 80, "product": "A"}, 
+          {"quarter": "Q2", "sales": 120, "product": "B"}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "stackedcolumnseries"}},
+  "Appearance": {"features": {"graph": [{}]}}
+}
+        </code></pre>
+    </section>
+    
+    <section id="stacked-bar">
+        <h2>Stacked Bar Chart</h2>
+        <p>A transposed version of the Stacked Column Chart, where series are stacked in horizontal bars.</p>
+        <p>Configuration is identical to Stacked Column Chart.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Developer Hours per Project",
+        "xAxisValue": "project",
+        "yAxisValue": "hours",
+        "filterKeys": ["dev"],
+        "data": [
+          {"project": "P1", "hours": 40, "dev": "Alice"}, 
+          {"project": "P1", "hours": 30, "dev": "Bob"}, 
+          {"project": "P2", "hours": 20, "dev": "Alice"}, 
+          {"project": "P2", "hours": 50, "dev": "Bob"}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "stackedbarseries"}},
+  "Appearance": {"features": {"graph": [{}]}}
+}
+        </code></pre>
+    </section>
+
+    <section id="stacked-column-100">
+        <h2>100% Stacked Column Chart</h2>
+        <p>A variation of the stacked column chart where the stacked bars are normalized to a total of 100%. This is useful for comparing the relative percentage contribution of each sub-group across categories.</p>
+        <p>Configuration is identical to Stacked Column Chart.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Browser Market Share",
+        "xAxisValue": "year",
+        "yAxisValue": "share",
+        "filterKeys": ["browser"],
+        "data": [
+          {"year": 2022, "share": 60, "browser": "Chrome"}, 
+          {"year": 2022, "share": 30, "browser": "Safari"}, 
+          {"year": 2023, "share": 70, "browser": "Chrome"}, 
+          {"year": 2023, "share": 25, "browser": "Safari"}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "stackedcolumn100series"}},
+  "Appearance": {"features": {"graph": [{}]}}
+}
+        </code></pre>
+    </section>
+
+    <section id="stacked-bar-100">
+        <h2>100% Stacked Bar Chart</h2>
+        <p>A transposed, 100% normalized version of the Stacked Bar Chart.</p>
+        <p>Configuration is identical to Stacked Column Chart.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "OS Share by Region",
+        "xAxisValue": "region",
+        "yAxisValue": "share",
+        "filterKeys": ["os"],
+        "data": [
+          {"region": "Americas", "share": 40, "os": "iOS"}, 
+          {"region": "Americas", "share": 55, "os": "Android"}, 
+          {"region": "Europe", "share": 30, "os": "iOS"}, 
+          {"region": "Europe", "share": 65, "os": "Android"}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "stackedbar100series"}},
+  "Appearance": {"features": {"graph": [{}]}}
+}
+        </code></pre>
+    </section>
+
+    <!-- FINANCIAL & STATISTICAL -->
+    <section id="hilo">
+        <h2>Hilo Chart</h2>
+        <p>A simple financial chart that displays the high and low values over a period. It does not show open or close values.</p>
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+         <p>The <code>yAxisValue</code> property is ignored. Instead, each data point must contain specific keys.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>high</code></td>
+                    <td>Number</td>
+                    <td><span class="badge badge-required">Required in Data</span> The key in each data object representing the high value for the period.</td>
+                </tr>
+                <tr>
+                    <td><code>low</code></td>
+                    <td>Number</td>
+                    <td><span class="badge badge-required">Required in Data</span> The key in each data object representing the low value for the period.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Daily High/Low",
+        "xAxisValue": "day",
+        "yAxisValue": "ignored",
+        "data": [{"day": 1, "high": 110, "low": 98}, {"day": 2, "high": 115, "low": 105}]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "hiloseries"}}
+}
+        </code></pre>
+    </section>
+
+    <section id="hilo-open-close">
+        <h2>Hilo Open/Close Chart</h2>
+        <p>An extension of the Hilo chart that also displays the opening and closing values for a period, shown as horizontal ticks on the vertical high-low line.</p>
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+         <p>The <code>yAxisValue</code> property is ignored. Instead, each data point must contain specific keys.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>high</code></td><td>Number</td><td><span class="badge badge-required">Required in Data</span> The high value.</td>
+                </tr>
+                <tr>
+                    <td><code>low</code></td><td>Number</td><td><span class="badge badge-required">Required in Data</span> The low value.</td>
+                </tr>
+                <tr>
+                    <td><code>open</code></td><td>Number</td><td><span class="badge badge-required">Required in Data</span> The opening value.</td>
+                </tr>
+                <tr>
+                    <td><code>close</code></td><td>Number</td><td><span class="badge badge-required">Required in Data</span> The closing value.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Daily OHLC",
+        "xAxisValue": "day",
+        "yAxisValue": "ignored",
+        "data": [{"day": 1, "open": 100, "high": 110, "low": 98, "close": 108}]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "hiloopencloseseries"}}
+}
+        </code></pre>
+    </section>
+
+    <section id="candle">
+        <h2>Candle Chart</h2>
+        <p>A comprehensive financial chart that displays high, low, open, and close values for a specific period. The "candle" body represents the open-close range, and its color indicates whether the price increased or decreased.</p>
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+        <p>Configuration is identical to the Hilo Open/Close Chart.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "OHLC Candle Chart",
+        "xAxisValue": "date",
+        "yAxisValue": "ignored",
+        "data": [
+          {"date": "2023-05-01", "open": 100, "high": 110, "low": 98, "close": 108}, 
+          {"date": "2023-05-02", "open": 108, "high": 115, "low": 105, "close": 112}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "candleseries"}}
+}
+        </code></pre>
+    </section>
+
+    <section id="box-whisker">
+        <h2>Box & Whisker Chart</h2>
+        <p>A standardized way of displaying the distribution of data based on a five-number summary: minimum, first quartile (Q1), median, third quartile (Q3), and maximum. It can also show outliers.</p>
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+        <p>The <code>yAxisValue</code> property must point to a key in the data whose value is an array of numbers. The chart will automatically calculate the quartiles, median, and outliers from this array.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>yAxisValue</code></td>
+                    <td>String</td>
+                    <td><span class="badge badge-required">Required</span> The key that points to an array of numbers (e.g., <code>"ms": [50, 65, 68, 72, ...]</code>).</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "API Response Time",
+        "xAxisValue": "server",
+        "yAxisValue": "ms",
+        "data": [
+          {"server": "US-East-1", "ms": [60, 70, 75, 80, 82, 85, 90, 150]}, 
+          {"server": "EU-West-1", "ms": [50, 65, 68, 72, 78, 80, 85, 95]}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "boxandwhiskerseries"}}
+}
+        </code></pre>
+    </section>
+
+    <section id="error-bar">
+        <h2>Error Bar Chart</h2>
+        <p>A chart that visualizes the variability or uncertainty in a reported measurement. It's often used on top of another chart type like a Column or Bar chart.</p>
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+        <p>Each data point must have a key that represents the error margin for its `yAxisValue`.</p>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>error</code></td>
+                    <td>Number</td>
+                    <td><span class="badge badge-required">Required in Data</span> The key in each data object that specifies the error value (e.g., standard deviation).</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Experimental Measurements",
+        "xAxisValue": "measurement",
+        "yAxisValue": "value",
+        "data": [
+          {"measurement": "M1", "value": 10, "error": 1.2}, 
+          {"measurement": "M2", "value": 15, "error": 1.5}, 
+          {"measurement": "M3", "value": 12, "error": 1.1}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "errorbarseries"}}
+}
+        </code></pre>
+    </section>
+
+
+    <!-- CIRCULAR CHARTS -->
+    <section id="pie">
+         <h2>Pie Chart</h2>
+        <p>A circular statistical graphic, which is divided into slices to illustrate numerical proportion. Each slice's arc length is proportional to the quantity it represents.</p>
+        
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Market Share",
+        "xAxisValue": "company",
+        "yAxisValue": "share",
+        "data": [
+          {"company": "Alpha", "share": 40}, 
+          {"company": "Beta", "share": 30}, 
+          {"company": "Gamma", "share": 30}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "piechart"}},
+  "Appearance": {"features": {"graph": [{}]}}
+}
+        </code></pre>
+    </section>
+
+    <section id="doughnut">
+         <h2>Doughnut Chart</h2>
+        <p>Functionally identical to a Pie Chart, but with a blank center, allowing for a more space-efficient layout or for displaying a total value in the middle.</p>
+        <p>Configuration is identical to the Pie Chart.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Budget Allocation",
+        "xAxisValue": "department",
+        "yAxisValue": "budget",
+        "data": [
+          {"department": "R&D", "budget": 35}, 
+          {"department": "Marketing", "budget": 25}, 
+          {"department": "Ops", "budget": 20}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "doughnutchart"}},
+  "Appearance": {"features": {"graph": [{}]}}
+}
+        </code></pre>
+    </section>
+    
+    <section id="radial-bar">
+         <h2>Radial Bar Chart</h2>
+        <p>Similar to a bar chart, but the bars are displayed on a circular or radial scale. It's effective for showing progress towards a goal or comparing values across categories in a compact format.</p>
+        
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Task Progress",
+        "xAxisValue": "task",
+        "yAxisValue": "percent",
+        "data": [
+          {"task": "Design", "percent": 100}, 
+          {"task": "Development", "percent": 75}, 
+          {"task": "Testing", "percent": 50}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "radialbarchart"}},
+  "Appearance": {"features": {"graph": []}}
+}
+        </code></pre>
+    </section>
+
+    <!-- SPECIALIZED CHARTS -->
+    <section id="funnel">
+         <h2>Funnel Chart</h2>
+        <p>Used to visualize the progressive reduction of data as it passes from one phase to another. Values in each stage are typically a subset of the previous stage.</p>
+        
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Sales Conversion Funnel",
+        "xAxisValue": "stage",
+        "yAxisValue": "users",
+        "data": [
+          {"stage": "Website Visitors", "users": 25000},
+          {"stage": "Product Views", "users": 12000},
+          {"stage": "Added to Cart", "users": 4000},
+          {"stage": "Purchased", "users": 1500}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "funnelchart"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#3F51B5"}]}}
+}
+        </code></pre>
+    </section>
+
+    <section id="pyramid">
+         <h2>Pyramid Chart</h2>
+        <p>A triangular chart, divided into sections to show hierarchical structures or proportions. The sections are stacked, and the width of each section indicates its level or quantity.</p>
+        
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Maslow's Hierarchy",
+        "xAxisValue": "need",
+        "yAxisValue": "level",
+        "data": [
+            {"need": "Physiological", "level": 1}, 
+            {"need": "Safety", "level": 2}, 
+            {"need": "Love", "level": 3},
+            {"need": "Esteem", "level": 4},
+            {"need": "Self-Actualization", "level": 5}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "pyramidchart"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#009688"}]}}
+}
+        </code></pre>
+    </section>
+    
+    <section id="radar">
+         <h2>Radar Chart</h2>
+        <p>A graphical method of displaying multivariate data in the form of a two-dimensional chart of three or more quantitative variables represented on axes starting from the same point.</p>
+        
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Performance Analysis",
+        "xAxisValue": "metric",
+        "yAxisValue": "score",
+        "data": [
+            {"metric": "CPU", "score": 9}, 
+            {"metric": "Memory", "score": 7}, 
+            {"metric": "Disk I/O", "score": 6}, 
+            {"metric": "Network", "score": 8}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "radarchart"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#E91E63"}]}}
+}
+        </code></pre>
+    </section>
+
+     <!-- GAUGES -->
+    <section id="radial-gauge">
+        <h2>Radial Gauge</h2>
+        <p>A data visualization tool that displays a single value on a circular scale. It's often used to show progress towards a goal or a key performance indicator (KPI).</p>
+        <p>The gauge reads the first data point from the <code>data</code> array.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Sales Target KPI",
+        "xAxisValue": "metric_name",
+        "yAxisValue": "value",
+        "data": [{"metric_name": "Sales Target", "value": 84}]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "radialgauge"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#FF5722"}]}}
+}
+        </code></pre>
+    </section>
+    
+    <section id="linear-gauge">
+        <h2>Linear Gauge</h2>
+        <p>A data visualization tool that displays a single value on a linear scale, which can be oriented horizontally or vertically. It's used for showing progress or levels.</p>
+        <p>The gauge reads the first data point from the <code>data</code> array.</p>
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Project Completion",
+        "xAxisValue": "project",
+        "yAxisValue": "completion",
+        "data": [{"project": "Feature Rollout", "completion": 95}]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "lineargauge"}},
+  "Appearance": {"features": {"graph": [{"barColor": "#8BC34A"}]}}
+}
+        </code></pre>
+    </section>
+
+
+    <!-- MAPS -->
+    <section id="shape-map">
+        <h2>Shape Map</h2>
+        <p>A map that visualizes data by coloring geographical areas (shapes) based on a numeric value. It requires a GeoJSON file for the map shapes and data that links to those shapes.</p>
+
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>mapAssetPath</code></td><td>String</td><td><span class="badge badge-required">Required</span> The local asset path to the GeoJSON file defining the map shapes (e.g., "assets/world_map.json").</td>
+                </tr>
+                <tr>
+                    <td><code>mapShapeDataKey</code></td><td>String</td><td><span class="badge badge-required">Required</span> The key within the GeoJSON file's `properties` that matches the values from your `xAxisValue`. For example, if your data has `{"country": "Canada"}` and your GeoJSON has `properties: {"name": "Canada"}`, this key should be "name".</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Specific <code>Appearance.graph</code> Properties</h3>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td><code>colorMappers</code></td><td>Array&lt;Object&gt;</td><td><span class="badge badge-required">Required</span> Defines how data values map to colors. Each object in the array has <code>from</code> (Number), <code>to</code> (Number), <code>color</code> (String), and <code>text</code> (String, for the legend).</td></tr>
+                <tr>
+                    <td><code>legendIconType</code></td>
+                    <td>String</td>
+                    <td><span class="badge badge-info">Maps</span> Sets the icon shape in the legend. Values: <code>"circle"</code> (default), <code>"diamond"</code>, <code>"rectangle"</code>, <code>"triangle"</code>.</td>
+                </tr>
+                <tr><td><code>shapeFillColor</code></td><td>String</td><td>The default fill color for map shapes that don't match any data.</td></tr>
+                <tr><td><code>shapeStrokeColor</code></td><td>String</td><td>The color of the border around each map shape.</td></tr>
+                <tr><td><code>shapeStrokeWidth</code></td><td>Number</td><td>The width of the border around each map shape.</td></tr>
+                <tr><td><code>showDataLabels</code></td><td>Boolean</td><td>If <code>true</code>, displays the `xAxisValue` on each corresponding map shape.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "World Population",
+        "xAxisValue": "country_name",
+        "yAxisValue": "population_mil",
+        "mapAssetPath": "assets/world_map.json",
+        "mapShapeDataKey": "name",
+        "data": [
+          {"country_name": "United States of America", "population_mil": 331}, 
+          {"country_name": "India", "population_mil": 1380}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "shapeMap"}},
+  "Appearance": {
+    "features": {
+      "graph": [{
+        "showLegend": true,
+        "legendIconType": "diamond",
+        "colorMappers": [
+          {"from": 0, "to": 100, "color": "#FFFFCC", "text": "< 100M"},
+          {"from": 101, "to": 500, "color": "#A1DAB4", "text": "101-500M"},
+          {"from": 501, "to": 1500, "color": "#253494", "text": "> 500M"}
+        ]
+      }]
+    }
+  }
+}
+        </code></pre>
+    </section>
+    
+    <section id="bubble-map">
+        <h2>Bubble Map</h2>
+        <p>Overlays bubbles on a shape map. The size of each bubble corresponds to a data value, providing a quick way to compare magnitudes across geographical regions.</p>
+
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>mapAssetPath</code></td><td>String</td><td><span class="badge badge-required">Required</span> Path to the GeoJSON map file.</td>
+                </tr>
+                <tr>
+                    <td><code>mapShapeDataKey</code></td><td>String</td><td><span class="badge badge-required">Required</span> Key in GeoJSON properties to match with `xAxisValue`.</td>
+                </tr>
+                 <tr>
+                    <td><code>bubbleSizeKey</code></td><td>String</td><td><span class="badge badge-required">Required</span> The key in each data object that determines the size of the bubble.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Specific <code>Appearance.graph</code> Properties</h3>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>legendIconType</code></td>
+                    <td>String</td>
+                    <td><span class="badge badge-info">Maps</span> Sets the icon shape in the legend. Values: <code>"circle"</code> (default), <code>"diamond"</code>, <code>"rectangle"</code>, <code>"triangle"</code>.</td>
+                </tr>
+                <tr><td><code>bubbleColor</code></td><td>String</td><td>The fill color of the bubbles.</td></tr>
+                <tr><td><code>bubbleOpacity</code></td><td>Number</td><td>The opacity of the bubbles (from 0.0 to 1.0).</td></tr>
+                <tr><td><code>minBubbleRadius</code></td><td>Number</td><td>The minimum radius for the smallest bubble.</td></tr>
+                <tr><td><code>maxBubbleRadius</code></td><td>Number</td><td>The maximum radius for the largest bubble.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "World GDP (Trillion USD)",
+        "xAxisValue": "country_name",
+        "yAxisValue": "gdp_trillion",
+        "mapAssetPath": "assets/world_map.json",
+        "mapShapeDataKey": "name",
+        "bubbleSizeKey": "gdp_trillion",
+        "data": [
+          {"country_name": "United States of America", "gdp_trillion": 25.4},
+          {"country_name": "China", "gdp_trillion": 19.9}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "bubbleMap"}},
+  "Appearance": {
+    "features": {
+      "graph": [{
+        "bubbleColor": "#F44336",
+        "minBubbleRadius": 10,
+        "maxBubbleRadius": 30
+      }]
+    }
+  }
+}
+        </code></pre>
+    </section>
+
+    <section id="marker-map">
+        <h2>Marker Map</h2>
+        <p>Places markers (icons) at specific latitude and longitude coordinates on a map. Ideal for plotting points of interest, cities, or specific locations.</p>
+
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td><code>mapAssetPath</code></td><td>String</td><td><span class="badge badge-required">Required</span> Path to the GeoJSON map file.</td></tr>
+                <tr><td><code>mapShapeDataKey</code></td><td>String</td><td><span class="badge badge-optional">Optional</span> Key in GeoJSON properties. Not strictly required for markers but good for context.</td></tr>
+                <tr><td><code>markerLatitudeKey</code></td><td>String</td><td><span class="badge badge-required">Required</span> The key in each data object for the latitude value.</td></tr>
+                <tr><td><code>markerLongitudeKey</code></td><td>String</td><td><span class="badge badge-required">Required</span> The key in each data object for the longitude value.</td></tr>
+            </tbody>
+        </table>
+        
+        <h3>Specific <code>Appearance.graph</code> Properties</h3>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td><code>barColor</code></td><td>String</td><td>Used to color the markers.</td></tr>
+                <tr><td><code>tooltipColor</code></td><td>String</td><td>The background color of the marker tooltip.</td></tr>
+            </tbody>
+        </table>
+
+         <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Major US Cities",
+        "xAxisValue": "city",
+        "yAxisValue": "population",
+        "mapAssetPath": "assets/usa.json",
+        "mapShapeDataKey": "name",
+        "markerLatitudeKey": "lat",
+        "markerLongitudeKey": "lon",
+        "data": [
+          {"city": "New York", "population": "8.4M", "lat": 40.7128, "lon": -74.0060},
+          {"city": "Los Angeles", "population": "3.9M", "lat": 34.0522, "lon": -118.2437}
+        ]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "markerMap"}, "features": {"enableZoomAndPan": true}},
+  "Appearance": {"features": {"graph": [{"barColor": "#EE368C"}]}}
+}
+        </code></pre>
+    </section>
+    
+    <section id="polyline-map">
+        <h2>Polyline Map</h2>
+        <p>Draws lines or paths on a map, defined by a series of latitude and longitude coordinates. Excellent for visualizing routes, boundaries, or connections.</p>
+
+        <h3>Specific <code>Data.graph</code> Properties</h3>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td><code>mapAssetPath</code></td><td>String</td><td><span class="badge badge-required">Required</span> Path to the GeoJSON map file.</td></tr>
+                <tr><td><code>polylineData</code></td><td>String (JSON)</td><td><span class="badge badge-required">Required</span> A JSON string representing an array of routes. Each route object should have a `points` property which is an array of `[latitude, longitude]` pairs. Example: `"[{\"name\":\"Route 1\",\"points\":[[lat1,lon1],[lat2,lon2]]}]"`.</td></tr>
+            </tbody>
+        </table>
+        
+        <h3>Specific <code>Appearance.graph</code> Properties</h3>
+        <table>
+            <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td><code>lineColor</code></td><td>String</td><td>The color of the polyline. Falls back to `barColor`.</td></tr>
+                <tr><td><code>lineWidth</code></td><td>Number</td><td>The width of the polyline. Defaults to 3.0.</td></tr>
+            </tbody>
+        </table>
+
+         <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {
+      "graph": {
+        "title": "Route to Windsor Castle",
+        "xAxisValue": "name", "yAxisValue": "distance",
+        "mapAssetPath": "assets/maps_uk_boundary.json",
+        "mapShapeDataKey": "name",
+        "polylineData": "[{\\"name\\":\\"Route from London\\",\\"points\\":[[51.5074,-0.1278],[51.4817,-0.6053]]}]",
+        "data": [{"name": "Route 1", "distance": 22}]
+      }
+    }
+  },
+  "Config": {"viewModes": {"presentation": "polylineMap"}},
+  "Appearance": {
+    "features": {
+      "graph": [{
+        "lineColor": "#D50000",
+        "lineWidth": 5
+      }]
+    }
+  }
+}
+        </code></pre>
+    </section>
+
+    <!-- OTHER -->
+    <section id="unsupported">
+         <h2>Unsupported Chart</h2>
+        <p>This is a fallback view that is displayed whenever the <code>presentation</code> key in the <code>Config</code> object does not match any of the registered chart types. It safely handles invalid or future chart types by displaying an informative error message.</p>
+        
+        <h3>Example JSON</h3>
+        <pre><code class="language-json">
+{
+  "Data": {
+    "features": {"graph": {"title": "Invalid Chart"}}
+  },
+  "Config": {
+    "viewModes": {"presentation": "this-chart-does-not-exist"}
+  },
+  "Appearance": {}
+}
+        </code></pre>
+    </section>
+
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('#nav-menu a');
+        const sections = document.querySelectorAll('#main-content section');
+
+        function showSection(hash) {
+            // Default to the first section if hash is empty or invalid
+            if (!hash || !document.querySelector(hash)) {
+                hash = links[0].getAttribute('href');
+            }
+
+            sections.forEach(section => {
+                if ('#' + section.id === hash) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            links.forEach(link => {
+                if (link.getAttribute('href') === hash) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            window.scrollTo(0, 0);
+        }
+
+        // Event listener for nav links
+        links.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const hash = link.getAttribute('href');
+                history.pushState(null, '', hash); // Update URL without reloading
+                showSection(hash);
+            });
+        });
+
+        // Show section based on initial URL hash
+        showSection(window.location.hash);
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', () => {
+            showSection(window.location.hash);
+        });
+
+        // Theme Switcher Logic
+        const themeSwitcher = document.getElementById('theme-switcher');
+        const html = document.documentElement;
+
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', currentTheme);
+
+        themeSwitcher.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+    });
+</script>
+
+</body>
+</html>
